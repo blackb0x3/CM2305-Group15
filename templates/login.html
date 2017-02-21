@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Login Page{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6" id="form-login">
+      <form class="form-signin" action="/login" method="POST">
+          <h2 class="form-signin-heading">Driver Login</h2>
+          <label for="inputEmail" class="sr-only">Username</label>
+          <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          {% if error %}
+            <label class="login-error">Invalid Username or Password</label>
+          {% endif %}
+      </form>
+    </div>
+    <div class="col-md-6" id="form-login">
+      <form class="form-signin" action="/admin/login" method="POST">
+          <h2 class="form-signin-heading">Client Login</h2>
+          <label for="inputEmail" class="sr-only">Username</label>
+          <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

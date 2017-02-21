@@ -1,0 +1,16 @@
+.form-signin{
+  padding: 50px 50px 20px 50px;
+}
+.form-signin-heading{
+  margin-bottom: 50px;
+}
+#inputUsername{
+  margin-bottom: 10px;
+}
+#inputPassword{
+  margin-bottom: 10px;
+}
+.login-error{
+  margin-top: 15px;
+  color: darkred;
+}
