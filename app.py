@@ -13,7 +13,9 @@ db.init_app(app)
 @app.route("/")
 def index():
     if 'username' in session:
-        return render_template('index.html')
+        driver_username = session['username']
+        driver_info = Drivers.query.filter_by(username=driver_username)
+        return render_template('index.html', u=driver_username)
     else:
         return redirect(url_for('login'))
 
