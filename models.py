@@ -18,19 +18,19 @@ class Drivers(db.Model):
         self.username = username
         self.password = password
         self.email = email
-    
-    def GetID():
+
+    def GetID(self):
         return Driver_ID
-    
+
     def GetForename(self):
         return first_name
-    
+
     def GetSurname(self):
         return last_name
-    
+
     def GetEmailAddress(self):
         return email
-    
+
     def ChangePassword(self, newPassword):
         password = newPassword
 
@@ -61,6 +61,21 @@ class Data(db.Model):
         self.X_Coord = X_Coord
         self.Y_Coord = Y_Coord
         self.speed = speed
+
+    def GetID(self):
+        return self.Route_ID
+
+    def GetXCoordinate(self):
+        return self.X_Coord
+
+    def GetYCoordinate(self):
+        return self.Y_Coord
+
+    def GetTimeRecorded(self):
+        return self.time
+
+    def GetSpeed(self):
+        return self.speed
 
 class Journeys(db.Model):
     __tablename__ = 'Journeys'
