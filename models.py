@@ -8,7 +8,7 @@ class Drivers(db.Model):
     first_name = db.Column(db.String(45))
     last_name = db.Column(db.String(45))
     username = db.Column(db.String(45), unique=True)
-    password = db.Column(db.Integer)
+    password = db.Column(db.String(500))
     email = db.Column(db.String(45))
     Client_ID = db.Column(db.BigInteger)
 
@@ -18,6 +18,21 @@ class Drivers(db.Model):
         self.username = username
         self.password = password
         self.email = email
+    
+    def GetID():
+        return Driver_ID
+    
+    def GetForename(self):
+        return first_name
+    
+    def GetSurname(self):
+        return last_name
+    
+    def GetEmailAddress(self):
+        return email
+    
+    def ChangePassword(self, newPassword):
+        password = newPassword
 
 class Client(db.Model):
     __tablename__ = 'Client'
