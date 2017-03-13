@@ -1,16 +1,29 @@
-from user import User
-from profile import Profile
-from models import Drivers
+from classes.user import User
+from classes.profile import Profile
+from classes.route import Route
+from models import Journey
 
 class Driver:
-    def __init__(self, Drivers):
-        self.estimatedInsurance = estimatedInsurance
-        self.profile = driverProfile
-        self.routes = routes
+    def __init__(self, driver_information):
+        # Do Not Move or Reorder
+        self.routes = []
+        self.information = driver_information
+        self.PopulateRoutes()
         self.averageWeeklyJourneys = self.UpdateWeeklyJourneys()
         self.averageBreaks = self.UpdateAverageBreaks()
+        self.profile = Profile(driver_information)
+        self.estimatedInsurance = self.CalculateInsurance()
 
     # If you're wondering why there's no user functions from the class diagram, see User
+
+    def PopulateRoutes(self):
+        results = Journey.query.filter_by(Driver_ID=self.information.GetID()).all()
+        for route in results:
+            new_route = Route(route.Route_ID)
+            self.AddRoute(new_route)
+
+    def CalculateInsurance(self):
+        pass
 
     def GetProfile(self):
         return self.profile

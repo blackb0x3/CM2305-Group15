@@ -20,19 +20,19 @@ class Drivers(db.Model):
         self.email = email
 
     def GetID(self):
-        return Driver_ID
+        return self.Driver_ID
 
     def GetForename(self):
-        return first_name
+        return self.first_name
 
     def GetSurname(self):
-        return last_name
+        return self.last_name
 
     def GetEmailAddress(self):
-        return email
+        return self.email
 
     def ChangePassword(self, newPassword):
-        password = newPassword
+        self.password = newPassword
 
 class Client(db.Model):
     __tablename__ = 'Client'
@@ -77,8 +77,8 @@ class Data(db.Model):
     def GetSpeed(self):
         return self.speed
 
-class Journeys(db.Model):
-    __tablename__ = 'Journeys'
+class Journey(db.Model):
+    __tablename__ = 'Journey'
     Journey_ID = db.Column(db.Integer, primary_key=True)
     Route_ID = db.Column(db.BigInteger, db.ForeignKey('Data.Route_ID'))
     Driver_ID = db.Column(db.BigInteger, db.ForeignKey('Drivers.Driver_ID'))
