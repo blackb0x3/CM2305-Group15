@@ -2,6 +2,7 @@ from classes.user import User
 from classes.profile import Profile
 from classes.route import Route
 from models import Journey
+from .. import Calculations # Imports from parent directory
 
 class Driver:
     def __init__(self, driver_information):
@@ -72,7 +73,20 @@ class Driver:
         # return 0
 
     def UpdateWeeklyJourneys(self):
-        return 0
+		self.averageWeeklyJourneys = meanAverage(len(self.routes), 7)
 
+		
+	# Points in each route should be sorted before calling this function
     def UpdateAverageBreaks(self):
-        return 0
+		self.averageBreaks = 0
+		
+		for route in self.routes:
+			thePoints = route.points
+			for point1, point2 in zip(thePoints, thePoints[1:]): # Gets each consecutive pair of points in the list
+				tempAcceleration = Calculations.acceleration(point2.GetSpeed(self), 
+															 point1.GetSpeed(self),
+															 point2.GetTimeRecorded(self),
+															 point1.GetTimeRecorded(self))
+				
+				if tempAcceleration >= -0.1 && tempAcceleration <= 0.1:
+					self.averageBreaks = self.averageBreaks + 1
