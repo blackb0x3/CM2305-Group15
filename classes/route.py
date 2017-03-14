@@ -24,17 +24,17 @@ class Route:
 
     # FUNCTIONS TO BE COMPLETED - MOVE ABOVE ME WHEN COMPLETE
 
-    def GetSpecificPoint(self, specificID):
-        return 0
+    # def GetSpecificPoint(self, specificID):
+        # return 0
 
-    def GetSpecificPoint(self, specificX, specificY):
-        return 0
+    # def GetSpecificPoint(self, specificX, specificY):
+        # return 0
 
-    def GetNumberOfBreaks(self):
-        return 0
+    # def GetNumberOfBreaks(self):
+        # return 0
 
-    def RemovePoint(self, specificID):
-        return 0
+    # def RemovePoint(self, specificID):
+        # return 0
 
-    def RemovePoint(self, specificX, specificY):
-        return 0
+    # def RemovePoint(self, specificX, specificY):
+        # return 0
