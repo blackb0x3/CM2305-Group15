@@ -2,27 +2,27 @@
 {% block title %}Journey Map{% endblock %}
 {% block content %}
 <div id="map"></div>
+{% endblock %}
+{% block scripts %}
 <script>
   function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 3,
+      zoom: 13,
       center: {{ origin }},
       mapTypeId: 'terrain'
     });
 
-    var flightPlanCoordinates = {{ coordinates }}
-    var flightPath = new google.maps.Polyline({
-      path: flightPlanCoordinates,
+    var pathcoordinates = {{ coordinates }};
+    var path = new google.maps.Polyline({
+      path: pathcoordinates,
       geodesic: true,
       strokeColor: '#FF0000',
       strokeOpacity: 1.0,
-      strokeWeight: 2
+      strokeWeight: 4
     });
 
-    flightPath.setMap(map);
+    path.setMap(map);
   }
 </script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbb0Q1q6NmxaojIwIBWZjsk10aelWgrdk&callback=initMap">
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi3rJAw-4rPJU5o6I7UXq06zUqIZsMQIc&callback=initMap"></script>
 {% endblock %}

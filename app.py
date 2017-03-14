@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, json
 from models import db, Drivers
 from classes.driver import Driver
 import sys
@@ -17,7 +17,11 @@ def index():
         driver_username = session['username']
         driver_information = Drivers.query.filter_by(username=driver_username).first()
         driver_stats = Driver(driver_information)
-        return render_template('index.html', u=driver_information.GetForename())
+        route_coordinates = driver_stats.routes[2].GetRoutePath()
+        origin = json.dumps(route_coordinates[0]).replace("\"", "")
+        route_coordinates = json.dumps(route_coordinates).replace("\"", "")
+        return render_template('map.html', coordinates=route_coordinates, origin=origin)
+        # return render_template('index.html', u=driver_information.GetForename())
     else:
         return redirect(url_for('login'))
 

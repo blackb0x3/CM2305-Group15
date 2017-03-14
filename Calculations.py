@@ -53,8 +53,8 @@ class Calculations:
         """ Convert X and Y Positions to longitude and latitude"""
         if not rawUTM:
             x_off, y_off = self.getLocationOffset()
-            x -= x_off
-            y -= y_off
+            x = x - float(x_off)
+            y = y - float(y_off)
         return self.getGeoProj()(x, y, inverse=True)
 
     def acceleration(s1, s2, t1, t2):
