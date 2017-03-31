@@ -2,12 +2,13 @@ from classes.user import User
 from classes.profile import Profile
 from classes.route import Route
 from models import Journey
-from .. import Calculations # Imports from parent directory
+from Calculations import Calculations
 
 class Driver:
     def __init__(self, driver_information):
         # Do Not Move or Reorder
         self.routes = []
+        self.calculation = Calculations()
         self.information = driver_information
         self.PopulateRoutes()
         self.averageWeeklyJourneys = self.UpdateWeeklyJourneys()
@@ -41,6 +42,12 @@ class Driver:
     def GetAllRoutes(self):
         return self.routes
 
+    def GetRouteById(self, route_id):
+        for route in self.routes:
+            if route.GetID() == int(route_id):
+                return route
+        return None
+
     def UpdateProfile(self, scores):
         for key in scores.keys():
             if key == "acceleration":
@@ -73,20 +80,15 @@ class Driver:
         # return 0
 
     def UpdateWeeklyJourneys(self):
-		self.averageWeeklyJourneys = meanAverage(len(self.routes), 7)
+        self.averageWeeklyJourneys = self.calculation.meanAverage(len(self.routes), 7)
 
-		
 	# Points in each route should be sorted before calling this function
     def UpdateAverageBreaks(self):
-		self.averageBreaks = 0
-		
-		for route in self.routes:
-			thePoints = route.points
-			for point1, point2 in zip(thePoints, thePoints[1:]): # Gets each consecutive pair of points in the list
-				tempAcceleration = Calculations.acceleration(point2.GetSpeed(self), 
-															 point1.GetSpeed(self),
-															 point2.GetTimeRecorded(self),
-															 point1.GetTimeRecorded(self))
-				
-				if tempAcceleration >= -0.1 && tempAcceleration <= 0.1:
-					self.averageBreaks = self.averageBreaks + 1
+        self.averageBreaks = 0
+        for route in self.routes:
+            thePoints = route.points
+            # Gets each consecutive pair of points in the list
+            for point1, point2 in zip(thePoints, thePoints[1:]):
+                tempAcceleration = self.calculation.acceleration(point2.GetSpeed(), point1.GetSpeed(), point2.GetTimeRecorded(), point1.GetTimeRecorded())
+                if tempAcceleration >= -0.1 and tempAcceleration <= 0.1:
+                    self.averageBreaks = self.averageBreaks + 1

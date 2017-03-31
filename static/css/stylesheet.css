@@ -24,3 +24,49 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+.progressbar {
+  width: 200px;
+  height: 100px;
+  position: absolute !important;
+}
+.progressbar span{
+  display: block;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+#progressbar2 {
+  margin-left: 300px;
+}
+#progressbar3 {
+  margin-left: 600px;
+}
+#progressbar4 {
+  margin-top: 200px;
+  margin-left: 150px;
+}
+#progressbar5 {
+  margin-top: 200px;
+  margin-left: 450px;
+}
+#progress-container{
+  margin: auto;
+  width: 50%;
+  margin-top: 100px;
+}
+.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}

@@ -57,11 +57,11 @@ class Calculations:
             y = y - float(y_off)
         return self.getGeoProj()(x, y, inverse=True)
 
-    def acceleration(s1, s2, t1, t2):
+    def acceleration(self, s1, s2, t1, t2):
         return (float)((s2 - s1) / (t2 - t1))
 
-    def meanAverage(journeys, days):
+    def meanAverage(self, journeys, days):
         return (float)(journeys / days)
 
-    def harmonicAverage(a):
+    def harmonicAverage(self, a):
         return (float)(len(a) / np.sum(1.0 / a))

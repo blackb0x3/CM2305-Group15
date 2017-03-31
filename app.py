@@ -17,11 +17,34 @@ def index():
         driver_username = session['username']
         driver_information = Drivers.query.filter_by(username=driver_username).first()
         driver_stats = Driver(driver_information)
-        route_coordinates = driver_stats.routes[2].GetRoutePath()
+        return render_template('index.html', map_route=driver_stats.routes[0].GetID())
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/journeys", methods=['GET'])
+def journeys():
+    if 'username' in session:
+        request_route = request.args.get('r')
+        driver_username = session['username']
+        driver_information = Drivers.query.filter_by(username=driver_username).first()
+        driver_stats = Driver(driver_information)
+        route_coordinates = driver_stats.GetRouteById(request_route).GetRoutePath()
         origin = json.dumps(route_coordinates[0]).replace("\"", "")
         route_coordinates = json.dumps(route_coordinates).replace("\"", "")
-        return render_template('map.html', coordinates=route_coordinates, origin=origin)
-        # return render_template('index.html', u=driver_information.GetForename())
+        routes = []
+        for route in driver_stats.GetAllRoutes():
+            route_info = {}
+            startTime = route.GetStartTime()
+            duration = route.GetDuration()
+            startPosition = route.GetStartPosition()
+            endPosition = route.GetEndPosition()
+            route_info['id'] = route.GetID()
+            route_info['time'] = startTime
+            route_info['duration'] = duration
+            route_info['start'] = startPosition
+            route_info['end'] = endPosition
+            routes.append(route_info)
+        return render_template('journeys.html', routes=routes, coordinates=route_coordinates, origin=origin, map_route=int(request_route))
     else:
         return redirect(url_for('login'))
 

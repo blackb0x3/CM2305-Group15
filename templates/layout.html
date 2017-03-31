@@ -9,12 +9,13 @@
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/stylesheet.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}">
   </head>
   <body>
   <div id="content">{% block content %}{% endblock %}</div>
-  {% block scripts %}{% endblock %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-
+  {% block scripts %}{% endblock %}
   </body>
 </html>

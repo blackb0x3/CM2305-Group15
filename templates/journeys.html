@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block title %}Journeys{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li><a href="./">Scores</a></li>
+      <li class="active"><a href="#">Journeys</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <table class="table table-fixed table-striped">
+  <thead>
+    <tr>
+      <th class="col-xs-1">Date</th>
+      <th class="col-xs-1">Time</th>
+      <th class="col-xs-2">Duration</th>
+      <th class="col-xs-3">Start Position</th>
+      <th class="col-xs-3">End Position</th>
+      <th class="col-xs-2">Map</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for route in routes %}
+      {% if route.id == map_route %}
+      <tr>
+        <td class="col-xs-1" style="background-color: #e0e0e0;">01/01/2017</td>
+        <td class="col-xs-1" style="background-color: #e0e0e0;">{{ route.time }}</td>
+        <td class="col-xs-2" style="background-color: #e0e0e0;">{{ route.duration }}</td>
+        <td class="col-xs-3" style="background-color: #e0e0e0;">{{ route.start[0] }}, {{ route.start[1] }}</td>
+        <td class="col-xs-3" style="background-color: #e0e0e0;">{{ route.end[0] }}, {{ route.end[1] }}</td>
+        <td class="col-xs-2" style="background-color: #e0e0e0;"><a href="./journeys?r={{ route.id }}">View</a></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td class="col-xs-1">01/01/2017</td>
+        <td class="col-xs-1">{{ route.time }}</td>
+        <td class="col-xs-2">{{ route.duration }}</td>
+        <td class="col-xs-3">{{ route.start[0] }}, {{ route.start[1] }}</td>
+        <td class="col-xs-3">{{ route.end[0] }}, {{ route.end[1] }}</td>
+        <td class="col-xs-2"><a href="./journeys?r={{ route.id }}">View</a></td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+<div id="map" style="width: 100%;"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: {{ origin }},
+      mapTypeId: 'terrain'
+    });
+
+    var pathcoordinates = {{ coordinates }};
+    var path = new google.maps.Polyline({
+      path: pathcoordinates,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 4
+    });
+
+    path.setMap(map);
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi3rJAw-4rPJU5o6I7UXq06zUqIZsMQIc&callback=initMap"></script>
+{% endblock %}
