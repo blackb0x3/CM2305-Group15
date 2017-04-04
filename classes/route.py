@@ -45,6 +45,7 @@ class Route:
         else:
             return 0
 
+    # List of points should be sorted before this method is called
     def GetDuration(self):
         if len(self.points) > 0:
             firstPoint = self.points[0]

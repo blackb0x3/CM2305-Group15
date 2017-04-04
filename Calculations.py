@@ -65,3 +65,41 @@ class Calculations:
 
     def harmonicAverage(self, a):
         return (float)(len(a) / np.sum(1.0 / a))
+
+    """
+    Get the average speed between each set of points in each route, if the average speed is consistent across most of
+    the routes, then return a high score, else, return a low score.
+    """
+    def rateAcceleration(self):
+        return 0
+
+    def rateBraking(self):
+        return 0
+
+
+    def rateTimeOfDriving(self, routes):
+        """
+        Get the time of driving for each point of each route, return a score based on the number of routes that have been
+        driven during the day.
+        :param Calculations self: The instance of the Calculations class
+        :param list[Route] routes: A driver's routes to be evaluated
+        :return int
+        """
+        totalTimeDriving = 0
+        dayDuration = 0
+
+        for route in routes:
+            firstPoint = route.points[0]
+
+
+
+        return False
+
+    def getHourOfDriving(self, seconds):
+        return (int)(seconds / 60) // 60 # Converts seconds to hours
+
+    def rateBreaksTaken(self):
+        return 0
+
+    def rateAverageSpeed(self):
+        return 0
