@@ -69,6 +69,9 @@ class Calculations:
     """
     Get the average speed between each set of points in each route, if the average speed is consistent across most of
     the routes, then return a high score, else, return a low score.
+
+    Get DBLA average brake speed / acceleration, create a normal distribution of braking / acceleration, compare this
+    to the DBLA average, return score based on this comparison.
     """
     def rateAcceleration(self):
         return 0
@@ -85,15 +88,38 @@ class Calculations:
         :param list[Route] routes: A driver's routes to be evaluated
         :return int
         """
+
         totalTimeDriving = 0
         dayDuration = 0
+        timeInRushHour = 0
+        morningHour = 7
+        eveningHour = 21
+        morningCutOff = morningHour * 60 * 60
+        eveningCutOff = eveningHour * 60 * 60
+        rushHourCutOffStart = 7 * 60 * 60
+        rushHourCutOffEnd = 9 * 60 * 60
+        rushHourPenalty = 0
+
 
         for route in routes:
-            firstPoint = route.points[0]
+            firstPoint = route.points[0].GetTimeRecorded()
+            lastPoint = route.points[len(route.points) - 1].GetTimeRecorded()
+            duration = lastPoint - firstPoint
+            totalTimeDriving += duration
+
+            dayDuration += duration - (morningCutOff - firstPoint)
 
 
+            if (firstPoint < rushHourCutOffStart or firstPoint < rushHourCutOffEnd) and lastPoint > rushHourCutOffStart:
+                rushHourPenalty += 1
 
-        return False
+
+        rushHourPenalty = rushHourPenalty / len(routes) * 0.25
+        rushHourPenalty = 1 - rushHourPenalty
+        totalTimeDriving += timeInRushHour
+        score = (int)(dayDuration / totalTimeDriving) * 100 * rushHourPenalty
+        return score
+
 
     def getHourOfDriving(self, seconds):
         return (int)(seconds / 60) // 60 # Converts seconds to hours
