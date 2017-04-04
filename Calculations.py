@@ -84,16 +84,16 @@ class Calculations:
         """
         Get the time of driving for each point of each route, return a score based on the number of routes that have been
         driven during the day.
-        :param Calculations self: The instance of the Calculations class
-        :param list[Route] routes: A driver's routes to be evaluated
-        :return int
+        :param Calculations self: The instance of the Calculations class.
+        :param list[Route] routes: A driver's routes to be evaluated.
+        :return int score: The score out of 100 for the times of day a driver drives their car.
         """
 
         totalTimeDriving = 0
         dayDuration = 0
         timeInRushHour = 0
-        morningHour = 7
-        eveningHour = 21
+        morningHour = 7 # Should be an integer between 4 and 8 - i.e. a morning time
+        eveningHour = 19
         morningCutOff = morningHour * 60 * 60
         eveningCutOff = eveningHour * 60 * 60
         rushHourCutOffStart = 7 * 60 * 60
@@ -107,14 +107,30 @@ class Calculations:
             duration = lastPoint - firstPoint
             totalTimeDriving += duration
 
-            dayDuration += duration - (morningCutOff - firstPoint)
+            # If the driver starts at night and ends in the day
+            if morningCutOff - firstPoint >= 0 and lastPoint <= eveningCutOff:
+                dayDuration += duration - (morningCutOff - firstPoint)
 
+            # If the driver starts in the day and ends in the day
+            elif morningCutOff - firstPoint < 0 and lastPoint <= eveningCutOff:
+                dayDuration += duration
 
+            # If the driver starts in the day and ends in the night
+            elif morningCutOff - firstPoint < 0 and lastPoint > eveningCutOff:
+                dayDuration += duration - firstPoint
+
+            # If the driver starts in the night and ends in the night, but drives throughout the day
+            # between the two cut off points for morning and evening
+            elif morningCutOff - firstPoint >= 0 and lastPoint > eveningCutOff:
+                dayDuration += eveningCutOff - morningCutOff
+
+            # If a driver drives during rush hour traffic, a penalty is accumulated
             if (firstPoint < rushHourCutOffStart or firstPoint < rushHourCutOffEnd) and lastPoint > rushHourCutOffStart:
                 rushHourPenalty += 1
 
 
-        rushHourPenalty = rushHourPenalty / len(routes) * 0.25
+        rushHourPenalty = rushHourPenalty / len(routes) * 0.25 # 0.25 - "1 in 4 chance of having an accident in rush hour"
+        #(http://demography.cpc.unc.edu/2014/03/24/1-in-4-car-accidents-occur-during-rush-hour/)
         rushHourPenalty = 1 - rushHourPenalty
         totalTimeDriving += timeInRushHour
         score = (int)(dayDuration / totalTimeDriving) * 100 * rushHourPenalty
