@@ -181,11 +181,30 @@ class Calculations:
         # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
         score = (int) (numberOfBreaks / secondsToHours(self, duration) * 100)
 
-        # Limits to 100 for any drivers who take very regular breaks when driving
-        if score > 100:
+        # Limits to 100 for any drivers who take very regular breaks when driving, or don't require a break because the journey doesn't take too long
+        if (numberOfBreaks < 1 and secondsToMinutes(duration) < 60) or score > 100:
             score = 100
 
         return score
 
+    def kphToMps(self, kph):
+        return ((kph * 1000) / 60) / 60
+
+    # Source: http://gogermany.about.com/od/planyourtrip/p/driving-Germany.htm
     def rateAverageSpeed(self):
-        return 0
+        speedLimitForCities = self.kphToMps(self, 50) # 31 mph / 50 kph
+        speedLimitForMotorways = self.kphToMps(self, 100) # 62mph / 100 kph - i.e. the autobahn
+        averageSpeedBetweenRoadTypes = speedLimitForMotorways - speedLimitForCities # Gets the average speed betwen the two types of roads
+
+        speeds = [route.GetAverageSpeed() for route in routes]
+        averageSpeed = sum(speeds) / len(speeds)
+        
+        score = 0
+        if averageSpeed > speedLimitForCities and averageSpeed < speedLimitForMotorways:
+            fraction = averageSpeed / averageSpeedBetweenRoadTypes if averageSpeed < averageSpeedBetweenRoadTypes else averageSpeedBetweenRoadTypes / averageSpeed
+            score = fraction * 100
+
+        elif averageSpeed > 0 and averageSpeed < speedLimitForCities:
+            score = (averageSpeed / averageSpeedBetweenRoadTypes) * 100
+
+        return score
