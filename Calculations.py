@@ -140,6 +140,24 @@ class Calculations:
     def getHourOfDriving(self, seconds):
         return (seconds / 60) // 60 # Converts seconds to hours
 
+    def secondsToMinutes(self, seconds):
+        return seconds / 60
+
+    def minutesToHours(self, minutes):
+        return minutes / 60
+
+    def secondsToHours(self, seconds):
+        return minutesToHours(secondsToMinutes(seconds))
+
+    def hoursToMinutes(self, hours):
+        return hours * 60
+
+    def minutesToSeconds(self, minutes):
+        return minutes * 60
+
+    def hoursToSeconds(self, hours):
+        return minutesToSeconds(hoursToMinutes(hours))
+
     def getTotalDrivingTime(self, routes):
         totalTimeDriving = 0
         for route in routes:
@@ -157,10 +175,17 @@ class Calculations:
             for i in range(len(route.points) - 2):
                 if route.points[i].GetXCoordinate() == route.points[i + 1].GetXCoordinate() and route.points[i].GetYCoordinate() == route.points[i + 1].GetYCoordinate():
                     if route.points[i + 1].GetXCoordinate() == route.points[i + 2].GetXCoordinate() and route.points[i + 1].GetYCoordinate() == route.points[i + 2].GetYCoordinate():
-                        numberOfBreaks += 1
-        # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
+                        if route.points[i + 2].GetTimeRecorded() - route.points[i].GetTimeRecorded() > minutesToSeconds(self, 15): # If time between stationary points is more than 15 minutes, this counts as a break from driving
+                            numberOfBreaks += 1
 
-        return 0
+        # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
+        score = (int) (numberOfBreaks / secondsToHours(self, duration) * 100)
+
+        # Limits to 100 for any drivers who take very regular breaks when driving
+        if score > 100:
+            score = 100
+
+        return score
 
     def rateAverageSpeed(self):
         return 0
