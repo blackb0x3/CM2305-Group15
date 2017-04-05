@@ -138,7 +138,7 @@ class Calculations:
 
 
     def getHourOfDriving(self, seconds):
-        return (int)(seconds / 60) // 60 # Converts seconds to hours
+        return (seconds / 60) // 60 # Converts seconds to hours
 
     def getTotalDrivingTime(self, routes):
         totalTimeDriving = 0
