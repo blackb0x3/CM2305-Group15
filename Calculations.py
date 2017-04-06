@@ -168,6 +168,12 @@ class Calculations:
         return totalTimeDriving
 
     def rateBreaksTaken(self, routes):
+        """
+        Calculates an average for how regularly a driver takes breaks from driving for each of their journeys.
+        :param Calculations self: The instance of the Calculations class.
+        :param list[Route] routes: A driver's routes to be evaluated.
+        :return int score: The score out of 100 for the frequency of resting from driving.
+        """
         numberOfBreaks = 0
         duration = getTotalDrivingTime(self, routes)
         durationInHours = getHourOfDriving(self, duration)
@@ -192,6 +198,12 @@ class Calculations:
 
     # Source: http://gogermany.about.com/od/planyourtrip/p/driving-Germany.htm
     def rateAverageSpeed(self):
+        """
+        Calculates an average for the average speed of a driver over different types of roads.
+        :param Calculations self: The instance of the Calculations class.
+        :param list[Route] routes: A driver's routes to be evaluated.
+        :return int score: The score out of 100 for the average driving speed of a driver.
+        """
         speedLimitForCities = self.kphToMps(self, 50) # 31 mph / 50 kph
         speedLimitForMotorways = self.kphToMps(self, 100) # 62mph / 100 kph - i.e. the autobahn
         averageSpeedBetweenRoadTypes = speedLimitForMotorways - speedLimitForCities # Gets the average speed between the two types of roads
