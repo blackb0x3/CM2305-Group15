@@ -194,7 +194,7 @@ class Calculations:
     def rateAverageSpeed(self):
         speedLimitForCities = self.kphToMps(self, 50) # 31 mph / 50 kph
         speedLimitForMotorways = self.kphToMps(self, 100) # 62mph / 100 kph - i.e. the autobahn
-        averageSpeedBetweenRoadTypes = speedLimitForMotorways - speedLimitForCities # Gets the average speed betwen the two types of roads
+        averageSpeedBetweenRoadTypes = speedLimitForMotorways - speedLimitForCities # Gets the average speed between the two types of roads
 
         speeds = [route.GetAverageSpeed() for route in routes]
         averageSpeed = sum(speeds) / len(speeds)
@@ -206,5 +206,8 @@ class Calculations:
 
         elif averageSpeed > 0 and averageSpeed < speedLimitForCities:
             score = (averageSpeed / averageSpeedBetweenRoadTypes) * 100
+
+        # Score should be 0 if driver has an average speed which is above the highest speed limit on a particular road type
+        # Increased risk of accidents could occur at very high speeds
 
         return score
