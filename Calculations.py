@@ -70,13 +70,39 @@ class Calculations:
     Get the average speed between each set of points in each route, if the average speed is consistent across most of
     the routes, then return a high score, else, return a low score.
 
-    Get DBLA average brake speed / acceleration, create a normal distribution of braking / acceleration, compare this
-    to the DBLA average, return score based on this comparison.
+    Get DVLA average brake speed / acceleration, create a normal distribution of braking / acceleration, compare this
+    to the DVLA average, return score based on this comparison.
     """
-    def rateAcceleration(self):
+    def rateAcceleration(self): #incomplete, we need a globalaverageAcceleration figure and we need a method for calculating the driver's average speed
+
+        #if self.averageAcceleration <= globalaverageAcceleration:
+        #    score = "Good"
+
+        #if self.averageAcceleration <= globalaverageAcceleration/2:
+        #    score = "Excellent"
+
+        #if self.averageAcceleration > globalaverageAcceleration:
+        #    score = "Bad"
+
+        #if self.averageAcceleration >= globalaverageAcceleration*1.5:
+        #    score = "Very Bad"
+
         return 0
 
-    def rateBraking(self):
+    def rateBraking(self): #incomplete for the same reasons that rateAcceleration is incomplete
+
+        #if self.averageBraking <= globalaverageBraking:
+            #score = "Soft"
+
+        #if self.averageBraking <= globalaveragBraking/2:
+            #score = "Very Soft"
+
+        #if self.averageBraking > globalaverageBraking:
+            #score = "Harsh"
+
+        #if self.averageBraking >= globalaverageBraking*1.5:
+            #score = "Very Harsh"
+
         return 0
 
 
@@ -210,7 +236,7 @@ class Calculations:
 
         speeds = [route.GetAverageSpeed() for route in routes]
         averageSpeed = sum(speeds) / len(speeds)
-        
+
         score = 0
         if averageSpeed > speedLimitForCities and averageSpeed < speedLimitForMotorways:
             fraction = averageSpeed / averageSpeedBetweenRoadTypes if averageSpeed < averageSpeedBetweenRoadTypes else averageSpeedBetweenRoadTypes / averageSpeed
