@@ -66,6 +66,24 @@ class Calculations:
     def harmonicAverage(self, a):
         return (float)(len(a) / np.sum(1.0 / a))
 
+    def secondsToMinutes(self, seconds):
+        return seconds / 60
+
+    def minutesToHours(self, minutes):
+        return minutes / 60
+
+    def secondsToHours(self, seconds):
+        return minutesToHours(secondsToMinutes(seconds))
+
+    def hoursToMinutes(self, hours):
+        return hours * 60
+
+    def minutesToSeconds(self, minutes):
+        return minutes * 60
+
+    def hoursToSeconds(self, hours):
+        return minutesToSeconds(hoursToMinutes(hours))
+
     """
     Get the average speed between each set of points in each route, if the average speed is consistent across most of
     the routes, then return a high score, else, return a low score.
@@ -120,10 +138,10 @@ class Calculations:
         timeInRushHour = 0
         morningHour = 7 # Should be an integer between 4 and 8 - i.e. a morning time
         eveningHour = 19
-        morningCutOff = morningHour * 60 * 60
-        eveningCutOff = eveningHour * 60 * 60
-        rushHourCutOffStart = 7 * 60 * 60
-        rushHourCutOffEnd = 9 * 60 * 60
+        morningCutOff = hoursToSeconds(morningHour)
+        eveningCutOff = hoursToSeconds(eveningHour)
+        rushHourCutOffStart = hoursToSeconds(7)
+        rushHourCutOffEnd = hoursToSeconds(9)
         rushHourPenalty = 0
 
 
@@ -165,24 +183,6 @@ class Calculations:
 
     def getHourOfDriving(self, seconds):
         return (seconds / 60) // 60 # Converts seconds to hours
-
-    def secondsToMinutes(self, seconds):
-        return seconds / 60
-
-    def minutesToHours(self, minutes):
-        return minutes / 60
-
-    def secondsToHours(self, seconds):
-        return minutesToHours(secondsToMinutes(seconds))
-
-    def hoursToMinutes(self, hours):
-        return hours * 60
-
-    def minutesToSeconds(self, minutes):
-        return minutes * 60
-
-    def hoursToSeconds(self, hours):
-        return minutesToSeconds(hoursToMinutes(hours))
 
     def getTotalDrivingTime(self, routes):
         totalTimeDriving = 0
