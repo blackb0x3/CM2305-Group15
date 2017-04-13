@@ -91,34 +91,62 @@ class Calculations:
     Get DVLA average brake speed / acceleration, create a normal distribution of braking / acceleration, compare this
     to the DVLA average, return score based on this comparison.
     """
-    def rateAcceleration(self): #incomplete, we need a globalaverageAcceleration figure and we need a method for calculating the driver's average speed
+    def rateAcceleration(self, routes): #incomplete, we need a globalaverageAcceleration figure and we need a method for calculating the driver's average speed
 
-        #if self.averageAcceleration <= globalaverageAcceleration:
+        minimumAcceleration = 2
+        accelerations = []
+        count = 0
+
+        for route in routes:
+
+            for point in route.points:
+
+                firstCoords = route.points[point]
+                firstXCoord = GetXCoordinate(firstCoords)
+                firstYCoord = GetYCoordinate(firstCoords)
+
+                secondCoords = route.points[point + 1]
+                secondXCoord = GetXCoordinate(secondCoords)
+                secondYCoord = GetYCoordinate(secondCoords)
+
+                pointAcceleration = acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
+
+                if pointAcceleration > 2:
+                    accelerations.append(pointAcceleration)
+
+        for figures in accelerations:
+            total += accelerations[figures]
+            count += 1
+
+        averageAcceleration = total/count
+
+
+        #if averageAcceleration <= globalaverageAcceleration:
         #    score = "Good"
 
-        #if self.averageAcceleration <= globalaverageAcceleration/2:
+        #if averageAcceleration <= globalaverageAcceleration/2:
         #    score = "Excellent"
 
-        #if self.averageAcceleration > globalaverageAcceleration:
+        #if averageAcceleration > globalaverageAcceleration:
         #    score = "Bad"
 
-        #if self.averageAcceleration >= globalaverageAcceleration*1.5:
+        #if averageAcceleration >= globalaverageAcceleration*1.5:
         #    score = "Very Bad"
 
         return 0
 
-    def rateBraking(self): #incomplete for the same reasons that rateAcceleration is incomplete
+    def rateBraking(self, routes): #incomplete for the same reasons that rateAcceleration is incomplete
 
-        #if self.averageBraking <= globalaverageBraking:
+        #if averageBraking <= globalaverageBraking:
             #score = "Soft"
 
-        #if self.averageBraking <= globalaveragBraking/2:
+        #if averageBraking <= globalaveragBraking/2:
             #score = "Very Soft"
 
-        #if self.averageBraking > globalaverageBraking:
+        #if averageBraking > globalaverageBraking:
             #score = "Harsh"
 
-        #if self.averageBraking >= globalaverageBraking*1.5:
+        #if averageBraking >= globalaverageBraking*1.5:
             #score = "Very Harsh"
 
         return 0
