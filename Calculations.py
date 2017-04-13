@@ -91,11 +91,19 @@ class Calculations:
     Get DVLA average brake speed / acceleration, create a normal distribution of braking / acceleration, compare this
     to the DVLA average, return score based on this comparison.
     """
-    def rateAcceleration(self, routes): #incomplete, we need a globalaverageAcceleration figure and we need a method for calculating the driver's average speed
+    def rateAcceleration(self, routes): #incomplete, we need a globalaverageAcceleration figure
 
         minimumAcceleration = 2
+        #function doesn't record acceleration values below 2 to prevent constant speed driving from skewing the data
+
         accelerations = []
+        #a list containing the acceleration between each point
+
         count = 0
+        #a count value for the average for loop
+
+        total = 0
+        #a total value for the accelerations
 
         for route in routes:
 
@@ -111,7 +119,7 @@ class Calculations:
 
                 pointAcceleration = acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
 
-                if pointAcceleration > 2:
+                if pointAcceleration > minimumAcceleration:
                     accelerations.append(pointAcceleration)
 
         for figures in accelerations:
@@ -136,6 +144,41 @@ class Calculations:
         return 0
 
     def rateBraking(self, routes): #incomplete for the same reasons that rateAcceleration is incomplete
+
+        minimumDeceleration = -2
+        #funtion doesn't record accelerations above -2
+
+        brakes = []
+        #list containing braking between each point
+
+        count = 0
+        #same purpose as it had in the acceleration function
+
+        total = 0
+        #same purpose as it had in the acceleration function
+
+        for route in routes:
+
+            for point in route.points:
+
+                firstCoords = route.points[point]
+                firstXCoord = GetXCoordinate(firstCoords)
+                firstYCoord = GetYCoordinate(firstCoords)
+
+                secondCoords = route.points[point + 1]
+                secondXCoord = GetXCoordinate(secondCoords)
+                secondYCoord = GetYCoordinate(secondCoords)
+
+                pointAcceleration = acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
+
+                if pointAcceleration < minimumDeceleration:
+                    brakes.append(pointAcceleration)
+
+        for figures in brakes:
+            total += brakes[figures]
+            count += 1
+
+        averageBraking = total/count
 
         #if averageBraking <= globalaverageBraking:
             #score = "Soft"
