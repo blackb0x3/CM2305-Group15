@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, request, j
 from models import db, Drivers
 from classes.driver import Driver
 import sys
+from Calculations import *
 
 app = Flask(__name__)
 
@@ -10,6 +11,7 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RS'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://group15.2016:K7fb7BpAn5Tk@csmysql.cs.cf.ac.uk/group15_2016'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+calculation = Calculations()
 
 @app.route("/")
 def index():
@@ -17,7 +19,11 @@ def index():
         driver_username = session['username']
         driver_information = Drivers.query.filter_by(username=driver_username).first()
         driver_stats = Driver(driver_information)
-        return render_template('index.html', map_route=driver_stats.routes[0].GetID())
+        the_map_route = driver_stats.routes[0].GetID()
+        the_average_speed = calculation.rateAverageSpeed(driver_stats.GetAllRoutes()) / 100
+        the_average_break_count = calculation.rateBreaksTaken(driver_stats.GetAllRoutes()) / 100
+        the_average_time = calculation.rateTimeOfDriving(driver_stats.GetAllRoutes()) / 100
+        return render_template('index.html', map_route=driver_stats.routes[0].GetID(), average_speed=the_average_speed, average_break_count=the_average_break_count, average_time=the_average_time)
     else:
         return redirect(url_for('login'))
 
@@ -72,4 +78,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

@@ -60,7 +60,7 @@ class Data(db.Model):
         self.time = time
         self.X_Coord = X_Coord
         self.Y_Coord = Y_Coord
-        self.speed = speed
+        self.speed = float(speed)
 
     def GetID(self):
         return self.Route_ID

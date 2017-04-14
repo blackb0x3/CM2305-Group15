@@ -1,6 +1,7 @@
 from math import sqrt, pow, pi, cos
 from haversine import haversine
 import pyproj
+import numpy as np
 
 class Calculations:
     def __init__(self):
@@ -64,7 +65,11 @@ class Calculations:
         return (float)(journeys / days)
 
     def harmonicAverage(self, a):
-        return (float)(len(a) / np.sum(1.0 / a))
+        for point in a[:]:
+            if point.GetSpeed() > -0.01 and point.GetSpeed() < 0.01:
+                a.remove(point)
+                # Above lines required to eliminate 0 speeds, since 1 / 0 outputs an error
+        return (float)(len(a) / np.sum([1.0 / float(point.GetSpeed()) for point in a]))
 
     def secondsToMinutes(self, seconds):
         return seconds / 60
@@ -73,7 +78,7 @@ class Calculations:
         return minutes / 60
 
     def secondsToHours(self, seconds):
-        return minutesToHours(secondsToMinutes(seconds))
+        return self.minutesToHours(self.secondsToMinutes(seconds))
 
     def hoursToMinutes(self, hours):
         return hours * 60
@@ -82,7 +87,7 @@ class Calculations:
         return minutes * 60
 
     def hoursToSeconds(self, hours):
-        return minutesToSeconds(hoursToMinutes(hours))
+        return self.minutesToSeconds(self.hoursToMinutes(hours))
 
     """
     Get the average speed between each set of points in each route, if the average speed is consistent across most of
@@ -133,15 +138,15 @@ class Calculations:
         :return int score: The score out of 100 for the times of day a driver drives their car.
         """
 
-        totalTimeDriving = getTotalDrivingTime(self, routes)
+        totalTimeDriving = self.getTotalDrivingTime(routes)
         dayDuration = 0
         timeInRushHour = 0
         morningHour = 7 # Should be an integer between 4 and 8 - i.e. a morning time
         eveningHour = 19
-        morningCutOff = hoursToSeconds(morningHour)
-        eveningCutOff = hoursToSeconds(eveningHour)
-        rushHourCutOffStart = hoursToSeconds(7)
-        rushHourCutOffEnd = hoursToSeconds(9)
+        morningCutOff = self.hoursToSeconds(morningHour)
+        eveningCutOff = self.hoursToSeconds(eveningHour)
+        rushHourCutOffStart = self.hoursToSeconds(7)
+        rushHourCutOffEnd = self.hoursToSeconds(9)
         rushHourPenalty = 0
 
 
@@ -149,10 +154,16 @@ class Calculations:
             firstPoint = route.points[0].GetTimeRecorded()
             lastPoint = route.points[len(route.points) - 1].GetTimeRecorded()
             duration = lastPoint - firstPoint
+            print("Start Time: " + self.timeToDate(firstPoint) + "\tEnd Time: " + self.timeToDate(lastPoint))
             totalTimeDriving += duration
 
+            # If the driver starts in the night and ends in the night, but doesn't drive throughout the day
+            # e.g. between 5 and 6 o'clock, or 20 and 21 o'clock
+            if (morningCutOff - firstPoint >= 0 and lastPoint < morningCutOff) or (eveningCutOff - firstPoint < 0 and lastPoint > eveningCutOff):
+                dayDuration += 0
+
             # If the driver starts at night and ends in the day
-            if morningCutOff - firstPoint >= 0 and lastPoint <= eveningCutOff:
+            elif morningCutOff - firstPoint >= 0 and lastPoint <= eveningCutOff:
                 dayDuration += duration - (morningCutOff - firstPoint)
 
             # If the driver starts in the day and ends in the day
@@ -177,7 +188,10 @@ class Calculations:
         #(http://demography.cpc.unc.edu/2014/03/24/1-in-4-car-accidents-occur-during-rush-hour/)
         rushHourPenalty = 1 - rushHourPenalty
         totalTimeDriving += timeInRushHour
-        score = (int)(dayDuration / totalTimeDriving) * 100 * rushHourPenalty
+        score = int((dayDuration / totalTimeDriving) * 100 * rushHourPenalty)
+
+        if score < 0:
+            score = 0
         return score
 
 
@@ -193,6 +207,12 @@ class Calculations:
             totalTimeDriving += duration
         return totalTimeDriving
 
+    def getTotalDrivingTimeForARoute(self, route):
+        firstPoint = route.points[0].GetTimeRecorded()
+        lastPoint = route.points[len(route.points) - 1].GetTimeRecorded()
+        duration = lastPoint - firstPoint
+        return duration
+
     def rateBreaksTaken(self, routes):
         """
         Calculates an average for how regularly a driver takes breaks from driving for each of their journeys.
@@ -200,38 +220,52 @@ class Calculations:
         :param list[Route] routes: A driver's routes to be evaluated.
         :return int score: The score out of 100 for the frequency of resting from driving.
         """
-        numberOfBreaks = 0
-        duration = getTotalDrivingTime(self, routes)
-        durationInHours = getHourOfDriving(self, duration)
+        scores = list()
         for route in routes:
-            for i in range(len(route.points) - 2):
-                if route.points[i].GetXCoordinate() == route.points[i + 1].GetXCoordinate() and route.points[i].GetYCoordinate() == route.points[i + 1].GetYCoordinate():
-                    if route.points[i + 1].GetXCoordinate() == route.points[i + 2].GetXCoordinate() and route.points[i + 1].GetYCoordinate() == route.points[i + 2].GetYCoordinate():
-                        if route.points[i + 2].GetTimeRecorded() - route.points[i].GetTimeRecorded() > minutesToSeconds(self, 15): # If time between stationary points is more than 15 minutes, this counts as a break from driving
+            numberOfBreaks = 0
+            duration = self.getTotalDrivingTimeForARoute(route)
+            durationInHours = self.getHourOfDriving(duration)
+            trackedPoints = list()
+            for i in range(len(route.points)):
+                if route.points[i] not in trackedPoints:
+                    if float(route.points[i].GetSpeed()) > float(-0.01) and float(route.points[i].GetSpeed()) < float(0.01):
+                        j = i + 1
+                        endPoint = route.points[i]
+                        trackedPoints.append(route.points[i])
+
+                        while route.points[j].GetSpeed() > -0.01 and route.points[j].GetSpeed() < 0.01:
+                            endPoint = route.points[j]
+                            trackedPoints.append(endPoint)
+                            j += 1
+                        lengthOfBreak = int(endPoint.GetTimeRecorded() - route.points[i].GetTimeRecorded())
+
+                        if self.secondsToMinutes(lengthOfBreak) > 20:
                             numberOfBreaks += 1
 
-        # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
-        score = (int) (numberOfBreaks / secondsToHours(self, duration) * 100)
+            # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
+            score = (int) (numberOfBreaks / self.secondsToHours(duration) * 100)
 
-        # Limits to 100 for any drivers who take very regular breaks when driving, or don't require a break because the journey doesn't take too long
-        if (numberOfBreaks < 1 and secondsToMinutes(duration) < 60) or score > 100:
-            score = 100
+            # Limits to 100 for any drivers who take very regular breaks when driving, or don't require a break because the journey doesn't take too long
+            if (numberOfBreaks < 1 and self.secondsToMinutes(duration) < 60) or score > 100:
+                score = 100
 
-        return score
+            scores.append(score)
+
+        return sum(scores) / len(scores)
 
     def kphToMps(self, kph):
         return ((kph * 1000) / 60) / 60
 
     # Source: http://gogermany.about.com/od/planyourtrip/p/driving-Germany.htm
-    def rateAverageSpeed(self):
+    def rateAverageSpeed(self, routes):
         """
         Calculates an average for the average speed of a driver over different types of roads.
         :param Calculations self: The instance of the Calculations class.
         :param list[Route] routes: A driver's routes to be evaluated.
         :return int score: The score out of 100 for the average driving speed of a driver.
         """
-        speedLimitForCities = self.kphToMps(self, 50) # 31 mph / 50 kph
-        speedLimitForMotorways = self.kphToMps(self, 100) # 62mph / 100 kph - i.e. the autobahn
+        speedLimitForCities = self.kphToMps(50) # 31 mph / 50 kph
+        speedLimitForMotorways = self.kphToMps(100) # 62mph / 100 kph - i.e. the autobahn
         averageSpeedBetweenRoadTypes = speedLimitForMotorways - speedLimitForCities # Gets the average speed between the two types of roads
 
         speeds = [route.GetAverageSpeed() for route in routes]
