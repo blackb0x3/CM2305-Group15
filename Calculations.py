@@ -259,7 +259,7 @@ class Calculations:
         #(http://demography.cpc.unc.edu/2014/03/24/1-in-4-car-accidents-occur-during-rush-hour/)
         rushHourPenalty = 1 - rushHourPenalty
         totalTimeDriving += timeInRushHour
-        score = int((dayDuration / totalTimeDriving) * 100 * rushHourPenalty)
+        score = (((float(dayDuration) / float(totalTimeDriving)) * 100) * rushHourPenalty)
 
         if score < 0:
             score = 0
@@ -314,8 +314,10 @@ class Calculations:
                             numberOfBreaks += 1
 
             # Work out the score for a certain number of breaks per given time interval, i.e. every 1 hour or so
-            score = (int) (numberOfBreaks / self.secondsToHours(duration) * 100)
-
+            timeHours = self.secondsToHours(duration)
+            if(timeHours == 0):
+                timeHours = 1
+            score = (int) (numberOfBreaks / timeHours * 100)
             # Limits to 100 for any drivers who take very regular breaks when driving, or don't require a break because the journey doesn't take too long
             if (numberOfBreaks < 1 and self.secondsToMinutes(duration) < 60) or score > 100:
                 score = 100

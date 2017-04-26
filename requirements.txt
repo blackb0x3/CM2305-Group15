@@ -1,5 +1,4 @@
 Flask==0.11.1
-mysql-python==1.2.5
 pyproj==1.9.5.1
 haversine==0.4.5
 Flask-SQLAlchemy==2.1
