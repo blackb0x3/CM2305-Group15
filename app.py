@@ -23,7 +23,9 @@ def index():
         the_average_speed = calculation.rateAverageSpeed(driver_stats.GetAllRoutes()) / 100
         the_average_break_count = calculation.rateBreaksTaken(driver_stats.GetAllRoutes()) / 100
         the_average_time = calculation.rateTimeOfDriving(driver_stats.GetAllRoutes()) / 100
-        return render_template('index.html', map_route=driver_stats.routes[0].GetID(), average_speed=the_average_speed, average_break_count=the_average_break_count, average_time=the_average_time)
+        the_average_acceleration = calculation.rateAcceleration(driver_stats.GetAllRoutes()) / 100
+        the_average_braking = calculation.rateBraking(driver_stats.GetAllRoutes()) / 100
+        return render_template('index.html', map_route=driver_stats.routes[0].GetID(), average_speed=the_average_speed, average_break_count=the_average_break_count, average_time=the_average_time, average_acceleration=the_average_acceleration, average_braking=the_average_braking)
     else:
         return redirect(url_for('login'))
 
@@ -78,4 +80,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

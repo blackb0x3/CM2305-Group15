@@ -111,18 +111,14 @@ class Calculations:
         #a total value for the accelerations
 
         for route in routes:
+            for i in range(len(route.points) - 1):
+                firstXCoord = route.points[i].GetXCoordinate()
+                firstYCoord = route.points[i].GetYCoordinate()
 
-            for point in route.points:
+                secondXCoord = route.points[i + 1].GetXCoordinate()
+                secondYCoord = route.points[i + 1].GetYCoordinate()
 
-                firstCoords = route.points[point]
-                firstXCoord = GetXCoordinate(firstCoords)
-                firstYCoord = GetYCoordinate(firstCoords)
-
-                secondCoords = route.points[point + 1]
-                secondXCoord = GetXCoordinate(secondCoords)
-                secondYCoord = GetYCoordinate(secondCoords)
-
-                pointAcceleration = acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
+                pointAcceleration = self.acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
 
                 if pointAcceleration > minimumAcceleration:
                     accelerations.append(pointAcceleration)
@@ -146,7 +142,7 @@ class Calculations:
         #if averageAcceleration >= globalaverageAcceleration*1.5:
         #    score = "Very Bad"
 
-        return 0
+        return averageAcceleration
 
     def rateBraking(self, routes): #incomplete for the same reasons that rateAcceleration is incomplete
 
@@ -163,18 +159,14 @@ class Calculations:
         #same purpose as it had in the acceleration function
 
         for route in routes:
+            for i in range(len(route.points) - 1):
+                firstXCoord = route.points[i].GetXCoordinate()
+                firstYCoord = route.points[i].GetYCoordinate()
 
-            for point in route.points:
+                secondXCoord = route.points[i + 1].GetXCoordinate()
+                secondYCoord = route.points[i + 1].GetYCoordinate()
 
-                firstCoords = route.points[point]
-                firstXCoord = GetXCoordinate(firstCoords)
-                firstYCoord = GetYCoordinate(firstCoords)
-
-                secondCoords = route.points[point + 1]
-                secondXCoord = GetXCoordinate(secondCoords)
-                secondYCoord = GetYCoordinate(secondCoords)
-
-                pointAcceleration = acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
+                pointAcceleration = self.acceleration(firstXCoord, secondXCoord, firstYCoord, secondYCoord)
 
                 if pointAcceleration < minimumDeceleration:
                     brakes.append(pointAcceleration)
@@ -197,7 +189,7 @@ class Calculations:
         #if averageBraking >= globalaverageBraking*1.5:
             #score = "Very Harsh"
 
-        return 0
+        return averageBraking
 
 
     def rateTimeOfDriving(self, routes):
