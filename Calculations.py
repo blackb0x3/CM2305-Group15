@@ -59,7 +59,10 @@ class Calculations:
         return self.getGeoProj()(x, y, inverse=True)
 
     def acceleration(self, s1, s2, t1, t2):
-        return (float)((s2 - s1) / (t2 - t1))
+        if float(s2 - s1) == 0.0 or float(t2 - t1) == 0.0:
+            return 0
+        else:
+            return (float)((s2 - s1) / (t2 - t1))
 
     def meanAverage(self, journeys, days):
         return (float)(journeys / days)
@@ -124,11 +127,10 @@ class Calculations:
                     accelerations.append(pointAcceleration)
 
         for figures in accelerations:
-            total += accelerations[figures]
+            total += figures
             count += 1
 
         averageAcceleration = total/count
-
 
         #if averageAcceleration <= globalaverageAcceleration:
         #    score = "Good"
@@ -172,10 +174,12 @@ class Calculations:
                     brakes.append(pointAcceleration)
 
         for figures in brakes:
-            total += brakes[figures]
+            total += figures
             count += 1
 
-        averageBraking = total/count
+        averageBraking = (total/count) * -1
+        # averageBraking (the score to be returned) is decelerating, which is less than 0, which needs to be modified to
+        # a positive integer
 
         #if averageBraking <= globalaverageBraking:
             #score = "Soft"
