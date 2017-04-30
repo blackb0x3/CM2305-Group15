@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+  <center><div class="container">
+    <div class="signup-row">
+      <div class=id="form-signup">
+        <form class="form-signup" action="/register" method="POST">
+          <h2 class="form-signup-heading">Sign up here!</h2>
+          <label for="inputEmail" class="sr-only">FirstName</label>
+          <input type="text" name="Firstname" id="inputFirstname" class="form-control" placeholder="First Name" required="" autofocus="">
+          <label for="inputEmail" class="sr-only"> LastName</label>
+          <input type="text" name="Lastname" id="inputLastname" class="form-control" placeholder="Last Name" required="" autofocus="">
+          <label for="inputEmail" class="sr-only">Email</label>
+          <input type="text" name="Email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="">
+          <label for="inputEmail" class="sr-only">Username</label>
+          <input type="text" name="Username" id="inputUsername2" class="form-control" placeholder="Username" required="" autofocus="">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="Password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <label for="inputPassword" class="sr-only">Re-enter Password</label>
+          <input type="password" name="RePassword" id="inputRePassword" class="form-control" placeholder="Re-enter Password" required="">
+		  <label for="inputEmail" class="sr-only">Insurer Referral Code</label>
+          <input type="text" name="IRC" id="inputIRC" class="form-control" placeholder="Insurer Referral Code" required="" autofocus="">
+		  <input type="checkbox" name="checkbox" value="check" id="agree" /> I have read and agree to the Terms and Conditions and Privacy Policy
+		  <button class="btn btn-lg btn-primary btn-block" type="submit" id="signupButton"> Sign up now </button>
+        </form>
+      </div>
+    </div>
+  </div></center>
+  {% endblock %}

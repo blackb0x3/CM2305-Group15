@@ -34,6 +34,12 @@ class Drivers(db.Model):
     def ChangePassword(self, newPassword):
         self.password = newPassword
 
+    def GetClientID(self):
+        return self.Client_ID
+
+    def CheckPassword(self, password):
+        return (password == self.password)
+
 class Client(db.Model):
     __tablename__ = 'Client'
     Client_ID = db.Column(db.BigInteger, primary_key=True)
@@ -45,6 +51,9 @@ class Client(db.Model):
         self.Client_Name = name
         self.Client_Number = number
         self.Password = password
+
+    def GetClientName(self):
+        return self.Client_Name
 
 class Data(db.Model):
     __tablename__ = 'Data'

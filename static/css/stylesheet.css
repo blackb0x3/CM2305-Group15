@@ -70,3 +70,89 @@ html, body {
   float: left;
   border-bottom-width: 0;
 }
+.login-error{
+  margin-top: 15px;
+  color: darkred;
+}
+
+.container {
+    margin-top: 20px;
+    border: 5px solid #000;
+    width: 1000px;
+}
+.form-signup-heading{
+    margin-bottom: 30px;
+}
+#inputFirstname{
+    margin-bottom: 20px;
+}
+#inputLastname{
+    margin-bottom: 20px;
+}
+#inputEmail{
+    margin-bottom: 20px;
+}
+#inputUsername2{
+  margin-bottom: 20px;
+}
+#inputRePassword{
+    margin-bottom: 20px;
+}
+#inputIRC{
+    margin-bottom: 20px;
+}
+#inputTerms{
+    margin-bottom: 20px;
+}
+#signupButton{
+    margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#current{
+    margin-left: 51px;
+    margin-bottom: 10px;
+    width: 300px;
+}
+#new{
+    margin-left: 70px;
+    margin-bottom: 10px;
+    width: 300px;
+}
+#renew{
+    margin-left: 11px;
+    margin-bottom: 10px;
+    width: 300px;
+}
+#changePasswordButton{
+    width:500px;
+}
+fieldset{
+    width: 40%;
+}
+legend {
+    margin:0 ;
+}
+#accountContainer{
+    margin-left: 485px;
+}
+#first-name{
+    margin-left: 90px;
+    width: 300px;
+}
+#last-name{
+    margin-left: 90px;
+    width: 300px;
+}
+#account-username{
+    margin-left: 95px;
+    width: 300px;
+}
+#account-email{
+    margin-left: 125px;
+    width: 300px;
+}
+#insurance-provider{
+    margin-left: 42px;
+    width: 300px;
+}
