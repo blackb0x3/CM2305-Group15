@@ -1,0 +1,64 @@
+<div id="container">
+  <div id="progress-container">
+    <div class="progressbar" id="progressbar1"><span>Speed</span></div>
+    <div class="progressbar"  id="progressbar2"><span>Acceleration</span></div>
+    <div class="progressbar"  id="progressbar3"><span>Braking</span></div>
+    <div class="progressbar"  id="progressbar4"><span>Time</span></div>
+    <div class="progressbar"  id="progressbar5"><span>Intervals</span></div>
+  </div>
+</div>
+{% block scripts %}
+<script>
+  function createProgressBar(elem, color) {
+    return new ProgressBar.SemiCircle(elem, {
+      strokeWidth: 6,
+      color: '#FFEA82',
+      trailColor: '#eee',
+      trailWidth: 1,
+      easing: 'easeInOut',
+      duration: 1400,
+      svgStyle: null,
+      text: {
+        value: '',
+        alignToBottom: false
+      },
+      from: {color: '#ED6A5A'},
+      to: {color: color},
+      // Set default step function for all animate calls
+      step: (state, bar) => {
+        bar.path.setAttribute('stroke', state.color);
+        var value = Math.round(bar.value() * 100);
+        if (value === 0) {
+          bar.setText('');
+        } else {
+          bar.setText(value);
+        }
+
+        bar.text.style.color = state.color;
+      }
+    });
+  }
+  var bar = createProgressBar(progressbar1, '#4BC66A');
+  var bar2 = createProgressBar(progressbar2, '#4BC66A');
+  var bar3 = createProgressBar(progressbar3, '#4BC66A');
+  var bar4 = createProgressBar(progressbar4, '#4BC66A');
+  var bar5 = createProgressBar(progressbar5, '#4BC66A');
+
+  bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  bar.text.style.fontSize = '2rem';
+  bar2.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  bar2.text.style.fontSize = '2rem';
+  bar3.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  bar3.text.style.fontSize = '2rem';
+  bar4.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  bar4.text.style.fontSize = '2rem';
+  bar5.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  bar5.text.style.fontSize = '2rem';
+
+  bar.animate({{ average_speed }}); // Number from 0.0 to 1.0
+  bar2.animate({{ average_acceleration }});  // Number from 0.0 to 1.0
+  bar3.animate({{ average_braking }});  // Number from 0.0 to 1.0
+  bar4.animate({{ average_time }});  // Number from 0.0 to 1.0
+  bar5.animate({{ average_break_count }});  // Number from 0.0 to 1.0
+</script>
+{% endblock %}

@@ -29,7 +29,10 @@ def index():
         the_average_braking = calculation.rateBraking(driver_stats.GetAllRoutes()) / 100
         return render_template('index.html', map_route=driver_stats.routes[0].GetID(), average_speed=the_average_speed, average_break_count=the_average_break_count, average_time=the_average_time, average_acceleration=the_average_acceleration, average_braking=the_average_braking)
     else:
-        return redirect(url_for('login'))
+        if 'admin' in session:
+            return redirect(url_for('admin'))
+        else:
+            return redirect(url_for('login'))
 
 @app.route("/journeys", methods=['GET'])
 def journeys():
@@ -119,6 +122,89 @@ def login():
             else:
                 return render_template('login.html', error=True)
         return render_template('login.html', error=False)
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    if 'admin' in session:
+        return redirect(url_for('admin'))
+    else:
+        request_username = request.form['username']
+        request_password = request.form['password']
+        results = Client.query.filter_by(Client_Number=request_username).filter_by(Password=request_password).first()
+        if(results is not None):
+            session['admin'] = results.Client_Number
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error=True)
+
+@app.route('/admin', methods=['GET'])
+def admin():
+    if 'admin' in session:
+        client_number = session['admin']
+        client_information = Client.query.filter_by(Client_Number=client_number).first()
+        client_drivers = Drivers.query.filter_by(Client_ID=client_information.Client_ID).all()
+        return render_template('admin.html', drivers=client_drivers, client=client_information.Client_Name);
+    else:
+        return render_template('login.html', error=False)
+
+@app.route('/admin/journeys', methods=['GET'])
+def admin_journeys():
+    if 'admin' in session:
+        client_number = session['admin']
+        client_information = Client.query.filter_by(Client_Number=client_number).first()
+        request_driver = request.args.get('u')
+        request_route = request.args.get('r')
+        driver_information = Drivers.query.filter_by(Client_ID=client_information.Client_ID, Driver_ID=request_driver).first()
+        driver_stats = Driver(driver_information)
+        if(len(driver_stats.routes) == 0):
+            return ('', 204)
+        if request_route == '0':
+            request_route = driver_stats.routes[0].GetID()
+        route_coordinates = driver_stats.GetRouteById(request_route).GetRoutePath()
+        origin = json.dumps(route_coordinates[0]).replace("\"", "")
+        route_coordinates = json.dumps(route_coordinates).replace("\"", "")
+        routes = []
+        for route in driver_stats.GetAllRoutes():
+            route_info = {}
+            startTime = route.GetStartTime()
+            duration = route.GetDuration()
+            startPosition = route.GetStartPosition()
+            endPosition = route.GetEndPosition()
+            route_info['id'] = route.GetID()
+            route_info['time'] = startTime
+            route_info['duration'] = duration
+            route_info['start'] = startPosition
+            route_info['end'] = endPosition
+            routes.append(route_info)
+        return render_template('admin-journeys.html', routes=routes, coordinates=route_coordinates, origin=origin, map_route=int(request_route), user=request_driver)
+    else:
+        return render_template('login.html', error=False)
+
+@app.route('/admin/scores', methods=['GET'])
+def admin_scores():
+    if 'admin' in session:
+        client_number = session['admin']
+        client_information = Client.query.filter_by(Client_Number=client_number).first()
+        request_driver = request.args.get('u')
+        driver_information = Drivers.query.filter_by(Client_ID=client_information.Client_ID, Driver_ID=request_driver).first()
+        driver_stats = Driver(driver_information)
+        if(len(driver_stats.routes) == 0):
+            return render_template('admin-scores.html', average_speed=1, average_break_count=1, average_time=1, average_acceleration=1, average_braking=1)
+        the_map_route = driver_stats.routes[0].GetID()
+        the_average_speed = calculation.rateAverageSpeed(driver_stats.GetAllRoutes()) / 100
+        the_average_break_count = calculation.rateBreaksTaken(driver_stats.GetAllRoutes()) / 100
+        the_average_time = calculation.rateTimeOfDriving(driver_stats.GetAllRoutes()) / 100
+        the_average_acceleration = calculation.rateAcceleration(driver_stats.GetAllRoutes()) / 100
+        the_average_braking = calculation.rateBraking(driver_stats.GetAllRoutes()) / 100
+        return render_template('admin-scores.html', average_speed=the_average_speed, average_break_count=the_average_break_count, average_time=the_average_time, average_acceleration=the_average_acceleration, average_braking=the_average_braking)
+    else:
+        return render_template('login.html', error=False)
+
+@app.route('/admin/logout')
+def admin_logout():
+    # remove the username from the session if it's there
+    session.pop('admin', None)
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():

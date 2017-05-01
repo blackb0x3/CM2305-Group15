@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Drivers</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/admin/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <h2>{{client}}</h2>
+  <table class="table table-fixed table-striped">
+  <thead>
+    <tr>
+      <th class="col-xs-2">First Name</th>
+      <th class="col-xs-2">Last Name</th>
+      <th class="col-xs-2">Username</th>
+      <th class="col-xs-3">Scores</th>
+      <th class="col-xs-3">Journeys</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for driver in drivers %}
+      <tr>
+        <td class="col-xs-2">{{ driver.first_name }}</td>
+        <td class="col-xs-2">{{ driver.last_name }}</td>
+        <td class="col-xs-2">{{ driver.username }}</td>
+        <td class="col-xs-3"><a data-value="{{driver.Driver_ID}}" class="view-scores" style="cursor: pointer;">View Scores</a></td>
+        <td class="col-xs-3"><a data-route="0" data-value="{{driver.Driver_ID}}" class="view-journeys" style="cursor: pointer;">View Journeys</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<div id="results">
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+var isloading = false;
+$(document).off().on("click", '.view-journeys', function(event) {
+  if(!isloading){
+    isloading = true;
+    $( "#results" ).load( "/admin/journeys?r=" + $(this).data("route") + "&u=" + $(this).data("value"),function() {
+        isloading = false;
+    });
+  }
+}).on("click", '.view-scores', function(event) {
+  if(!isloading){
+    isloading = true;
+    $( "#results" ).load( "/admin/scores?u=" + $(this).data("value"),function() {
+        isloading = false;
+    });
+  }
+});
+</script>
+{% endblock %}
