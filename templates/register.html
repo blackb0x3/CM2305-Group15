@@ -6,6 +6,9 @@
       <div class=id="form-signup">
         <form class="form-signup" action="/register" method="POST">
           <h2 class="form-signup-heading">Sign up here!</h2>
+          {% if noMatchingPasswords %}
+            <label class="register-error login-error">Passwords don't match!</label>
+          {% endif %}
           <label for="inputEmail" class="sr-only">FirstName</label>
           <input type="text" name="Firstname" id="inputFirstname" class="form-control" placeholder="First Name" required="" autofocus="">
           <label for="inputEmail" class="sr-only"> LastName</label>

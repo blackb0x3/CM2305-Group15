@@ -97,14 +97,20 @@ def register():
         last_name = request.form['Lastname']
         username = request.form['Username']
         password = request.form['Password']
+        repassword = request.form['RePassword']
         email = request.form['Email']
-        driver = Drivers(first_name, last_name, username, password, email)
-        db.session.add(driver)
-        db.session.commit()
-        session['username'] = username
-        return redirect(url_for('index'))
+
+        if password != repassword:
+            return render_template('register.html', noMatchingPasswords=True)
+
+        else:
+            driver = Drivers(first_name, last_name, username, password, email)
+            db.session.add(driver)
+            db.session.commit()
+            session['username'] = username
+            return redirect(url_for('index'))
     else:
-        return render_template('register.html')
+        return render_template('register.html', noMatchingPasswords=False)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
