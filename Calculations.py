@@ -144,7 +144,7 @@ class Calculations:
         #if averageAcceleration >= globalaverageAcceleration*1.5:
         #    score = "Very Bad"
 
-        return averageAcceleration
+        return 100-averageAcceleration
 
     def rateBraking(self, routes): #incomplete for the same reasons that rateAcceleration is incomplete
 
@@ -193,7 +193,7 @@ class Calculations:
         #if averageBraking >= globalaverageBraking*1.5:
             #score = "Very Harsh"
 
-        return averageBraking
+        return 100-averageBraking
 
 
     def rateTimeOfDriving(self, routes):
