@@ -5,4 +5,4 @@ class User(object):
         self.surname = surname
         self.email = email
     
-    # Functions moved from Driver to models.py for simplicity
+# Functions moved from Driver to models.py for simplicity

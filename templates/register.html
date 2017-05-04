@@ -1,10 +1,24 @@
 {% extends "layout.html" %}
 {% block title %}My Account{% endblock %}
 {% block content %}
+  <script type="text/javascript">
+    var termsAndConditionsChecked = function() {
+      var checked = document.getElementById("agree").checked;
+
+      if (!checked) {
+        alert("You haven't agreed to the terms and conditions of the site!");
+        return false;
+      }
+
+      else {
+        return true;
+      }
+    };
+  </script>
   <center><div class="container">
     <div class="signup-row">
       <div class=id="form-signup">
-        <form class="form-signup" action="/register" method="POST">
+        <form class="form-signup" action="/register" method="POST" onsubmit="return termsAndConditionsChecked()">
           <h2 class="form-signup-heading">Sign up here!</h2>
           {% if noMatchingPasswords %}
             <label class="register-error login-error">Passwords don't match!</label>

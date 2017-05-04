@@ -19,6 +19,10 @@ class Driver:
     # If you're wondering why there's no user functions from the class diagram, see User
 
     def PopulateRoutes(self):
+        """
+        Retrieves and stores the driver's journeys retrieved from the database.
+        :return: Nothing.
+        """
         results = Journey.query.filter_by(Driver_ID=self.information.GetID()).all()
         for route in results:
             new_route = Route(route.Route_ID)
@@ -28,27 +32,58 @@ class Driver:
         pass
 
     def GetProfile(self):
+        """
+        Gets the driver's profile which stores their scores.
+        :return: The driver's profile.
+        """
         return self.profile
 
     def GetInsurance(self):
-        return self.estimatedInsurance
+        """
+        Should get the estimated insurance for a driver.
+        :return: The estimated insurance for a driver.
+        """
+        return None
 
     def GetWeeklyJourneys(self):
+        """
+        Should get the weekly journeys made by a driver.
+        Unable to use this function since our data doesn't contain dates, only times.
+        :return: The number of journeys made on average per week.
+        """
         return self.averageWeeklyJourneys
 
     def GetAverageNumberOfBreaks(self):
+        """
+        Should get the average number of breaks over the driver's routes.
+        :return: THe average break count across all routes.
+        """
         return self.averageBreaks
 
     def GetAllRoutes(self):
+        """
+        Gets all the routes for a particular driver.
+        :return: The driver's routes.
+        """
         return self.routes
 
     def GetRouteById(self, route_id):
+        """
+        Gets a route with a particular ID.
+        :param route_id: The ID to search for.
+        :return: The route with the specified ID, or None if not found.
+        """
         for route in self.routes:
             if route.GetID() == int(route_id):
                 return route
         return None
 
     def UpdateProfile(self, scores):
+        """
+        Updates the driver's profile based on different driving aspects (e.g. time of day, breaks taken, braking control etc.)
+        :param scores: The dictionary containing the scores to be updated and their respective values.
+        :return: Nothing.
+        """
         for key in scores.keys():
             if key == "acceleration":
                 self.profile.UpdateAccelerationScore(scores[key])
@@ -66,24 +101,34 @@ class Driver:
                 continue
 
     def AddRoute(self, newRoute):
+        """
+        Adds a route to a driver's list of driven routes.
+        :param newRoute: The route to be added.
+        :return: Nothing.
+        """
         self.routes.append(newRoute)
 
-    # FUNCTIONS TO BE COMPLETED - MOVE ABOVE ME WHEN COMPLETE
-
-    # def RemoveRoute(self, specificID):
-        # return 0
-
-    # def RemoveRoute(self, specificPoint):
-        # return 0
-
-    # def GetSpecificRoutes(self, specificPoint):
-        # return 0
-
     def UpdateWeeklyJourneys(self):
+        """
+        Should update the number of weekly journeys made by a driver. By removing the journeys older than 7 days and 
+        adding new journeys that are less than a day old in it's place.
+        
+        Not implementable with our current data, due to no dates being available, only the time - measured in seconds.
+        
+        :return: Nothing.
+        """
         self.averageWeeklyJourneys = self.calculation.meanAverage(len(self.routes), 7)
 
 	# Points in each route should be sorted before calling this function
     def UpdateAverageBreaks(self):
+        """
+        Should update the number of average breaks a driver makes for the routes he drives along - per week.
+        
+        Not implementable due to the data not containing any dates - just the time the point was captured, measured in 
+        seconds.
+        
+        :return: Nothing.
+        """
         self.averageBreaks = 0
         for route in self.routes:
             thePoints = route.points
